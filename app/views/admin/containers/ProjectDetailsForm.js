@@ -3,26 +3,43 @@ import { StyleSheet, css } from 'aphrodite';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { createMileStone } from '../../../actions/MilestoneAction';
-import { submitForm, clearFormData } from '../../../actions/ProjectFormActions';
+import { createMileStoneForProjDets } from '../../../actions/MilestoneAction';
+import { clearFormData } from '../../../actions/ProjectFormActions';
+import { updateFormData, updateToFirebase } from '../../../actions/FetchProjDetsFromFirebase';
+
 import MilestonesInput from '../components/milestonesComponent';
 
-class ProjectForm extends Component {
+class ProjectDetailsForm extends Component {
   constructor(props){
     super(props)
 
-    this.state = {
-      projectName: ""
-    }
-
+    console.log('prjtFrm',this.props)
     this.projectNameHandler = this.projectNameHandler.bind(this)
     this.milestoneOnHandleChange = this.milestoneOnHandleChange.bind(this)
     this.renderMilstonesInput = this.renderMilstonesInput.bind(this)
-    this.submitHandler = this.submitHandler.bind(this)
+    this.updateHandler = this.updateHandler.bind(this)
+  }
+
+  componentWillMount(){
+    this.setState({
+      projectName: this.props.data.projectName
+    })
+
+    const data = {
+      projectName: this.props.data.projectName,
+      milestones: [...this.props.data.milestones],
+      milestoneKeys: [],
+      numOfMilestones: 0,
+    }
+    let i = 0;
+    data.milestones.map(() => data.milestoneKeys = [...data.milestoneKeys, i++])
+    data.numOfMilestones = i
+    this.props.updateFormData(data)
   }
 
   componentDidUpdate(){
-    if(this.props.form.submit == true){
+    console.log('prjtdetsform',this.props)
+    if(this.props.projectDetail.update == true){
       this.props.clearFormData();
       this.context.router.push('/projects');
     }
@@ -40,9 +57,9 @@ class ProjectForm extends Component {
           <input placeholder="Name..." type="text" className={`form-control ${css(styles.inputStyle)}`}
             value={this.state.projectName} onChange ={(event) => this.projectNameHandler(event)} />
         </div>
-        {this.props.form.milestoneKeys.map((key) => this.renderMilstonesInput(key))}
+        {this.props.projectDetail.milestoneKeys.map((key) => this.renderMilstonesInput(key))}
         <img className={css(styles.addImage)} src="images/Add.png" onClick={() => this.milestoneOnHandleChange()}/>
-        <button className={css(styles.button)} onClick={()=> this.submitHandler()} >Submit</button>
+        <button className={css(styles.button)} onClick={()=> this.updateHandler()} >Update</button>
       </form>
     )
   }
@@ -54,36 +71,33 @@ class ProjectForm extends Component {
   }
 
   milestoneOnHandleChange(){
-    this.props.createMileStone()
-    console.log(this.props)
+    this.props.createMileStoneForProjDets()
   }
 
   renderMilstonesInput(key){
-      return <MilestonesInput key={key} id={key} fetchProjectDets={false}/>
+      return <MilestonesInput key={key} id={key} data={this.props.data.milestones[key]} fetchProjectDets={true}/>
   }
 
-  submitHandler(){
+  updateHandler(){
     const data = {
       projectName: this.state.projectName,
-      milestones: this.props.form.milestones
+      milestones: this.props.projectDetail.milestones
     }
-    console.log('submit data',data)
-
-    this.props.submitForm(data)
+    this.props.updateToFirebase(data, this.props.params)
   }
 }
 
 function mapStateToProps(state){
   return {
-    form: state.form,
+    projectDetail: state.projectDetail,
   }
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({ createMileStone, submitForm, clearFormData }, dispatch)
+  return bindActionCreators({ createMileStoneForProjDets, clearFormData, updateToFirebase, updateFormData }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProjectForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetailsForm);
 
 const styles = StyleSheet.create({
   formContainer: {

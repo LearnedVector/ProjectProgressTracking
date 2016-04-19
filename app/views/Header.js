@@ -9,9 +9,9 @@ class Header extends Component {
       <div>
         <div className={'navbar'}>
           <Link to="/">
-            <img className={css(styles.logo)} src="images/MakeLogo.png" />            
+            <img className={css(styles.logo)} src="images/MakeLogo.png" />
           </Link>
-          <Link to="/admin" className={css(styles.button)}>Manage</Link>
+          <Link to="/projects" className={css(styles.button)}>Manage</Link>
         </div>
         <div className={css(styles.bottomBorder)}>
         </div>

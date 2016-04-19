@@ -13,7 +13,7 @@ import reducers from './reducers/RootReducer';
 import routes from './routes'
 
 const reduxLogger = createLogger();
-
+//reduxLogger
 const createStoreWithMiddleware = applyMiddleware(reduxPromise, reduxThunk, reduxLogger)(createStore);
 
 //<Provider store> makes redux store available to the connect calls in the component heirarchy

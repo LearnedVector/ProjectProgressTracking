@@ -1,18 +1,19 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import { Route, IndexRoute, IndexRedirect } from 'react-router';
 
 import App from './views/App';
 import ProgressDisplay from './views/main/containers/ProgressDisplay';
 import Admin from './views/admin/containers/admin';
-import Addnew from './views/admin/containers/Addnew';
-import ProjectTable from './views/admin/components/ProjectTable';
+import FormContainer from './views/admin/containers/FormContainer';
+import ProjectTable from './views/admin/containers/ProjectTable';
 
 export default (
   <Route path="/" component={App} >
     <IndexRoute component={ProgressDisplay} />
-    <Route path="/admin" component={Admin} >
-      <IndexRoute component={ProjectTable} />
-      <Route path="/admin/addnew" component={Addnew} />
+    <Route component={Admin} >
+      <Route path="/projects" component={ProjectTable} >
+        <Route path="/projects/:id" component={FormContainer} />
+      </Route>
     </Route>
   </Route>
 );
