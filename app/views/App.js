@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import Header from './Header';
 import { StyleSheet, css } from 'aphrodite';
 class App extends Component {
@@ -6,7 +7,11 @@ class App extends Component {
     super(props)
   }
 
+  componentDidUpdate(){
+  }
+
   render() {
+    console.log('app', this.props)
     return(
       <div >
         <Header />
@@ -16,7 +21,6 @@ class App extends Component {
       </div>
     )
   }
-
 }
 
 

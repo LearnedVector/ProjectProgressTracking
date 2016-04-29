@@ -6,7 +6,7 @@ import { ListItem,ListDivider } from 'react-toolbox/lib/list';
 // import ProgressBar from 'react-toolbox/lib/progress_bar';
 var ProgressBar = require('progressbar.js')
 
-export default class TableRow extends Component {
+export default class MilestoneListRow extends Component {
   constructor(props){
     super(props)
   }

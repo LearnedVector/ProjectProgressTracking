@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { updateMileStone, upDateMilestonForProjDet  } from '../../../actions/MilestoneAction';
 
+import Input from 'react-toolbox/lib/input';
+import DatePicker from 'react-toolbox/lib/date_picker';
+
 class MilestonesInput extends Component {
 
   constructor(props){
     super(props)
-
+    const datetime = new Date();
     this.state = {
       name: "",
-      startDate: moment(),
-      endDate: moment()
+      startDate: datetime,
+      endDate: datetime
     }
 
     this.milestoneNameHandle = this.milestoneNameHandle.bind(this)
@@ -25,26 +28,26 @@ class MilestonesInput extends Component {
   }
 
   componentWillMount(){
-    if(this.props.fetchProjectDets == true){
-      this.setState({
-        name: this.props.data.name,
-        startDate: moment(this.props.data.startDate, "YYYY MM DD"),
-        endDate: moment(this.props.data.endDate, "YYYY MM DD")
-      }, () => {
-        this.props.updateMileStone({
-          name: this.state.name,
-          startDate: this.state.startDate.format("YYYY MM DD"),
-          endDate: this.state.endDate.format("YYYY MM DD")
-        }, this.props.id)
-      })
-  }
+  //   if(this.props.fetchProjectDets == true){
+  //     this.setState({
+  //       name: this.props.data.name,
+  //       startDate: moment(this.props.data.startDate, "YYYY MM DD"),
+  //       endDate: moment(this.props.data.endDate, "YYYY MM DD")
+  //     }, () => {
+  //       this.props.updateMileStone({
+  //         name: this.state.name,
+  //         startDate: this.state.startDate.format("YYYY MM DD"),
+  //         endDate: this.state.endDate.format("YYYY MM DD")
+  //       }, this.props.id)
+  //     })
+  // }
 }
 
 componentDidUpdate(){
   const data ={
     name: this.state.name,
-    startDate: this.state.startDate.format("YYYY MM DD"),
-    endDate: this.state.endDate.format("YYYY MM DD")
+    startDate: this.state.startDate.toDateString(),
+    endDate: this.state.endDate.toDateString()
   }
   this.props.updateMileStone(data, this.props.id)
 }
@@ -55,41 +58,26 @@ render(){
 
       <div className={css(styles.displayFlex)}>
         <div className={css(styles.flex7)}>
-          <label className={css(styles.label)}>Milestones</label>
-          <input type="text" className={`form-control ${css(styles.inputStyle)}`}
-            value={this.state.name} onChange={this.milestoneNameHandle} />
+          <Input type='text' label='Milestone' name='Milestones' value={this.state.name} onChange={this.milestoneNameHandle} />
         </div>
 
         <div className={css(styles.flex1)}>
-          <label className={css(styles.label), css(styles.inputMargin)}>Start Date</label>
-          <DatePicker
-            className={css(styles.datePicker)}
-            selected={this.state.startDate}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            onChange={this.startDateHandleChange}
-            />
+          <DatePicker autoOk label='Start Date' onChange={this.startDateHandleChange}
+            inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.startDate} />
         </div>
 
         <div className={css(styles.flex1)}>
-          <label className={css(styles.label), css(styles.inputMargin)}>End Date</label>
-          <DatePicker
-            className={css(styles.datePicker)}
-            selected={this.state.endDate}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            onChange={this.endDateHandleChange}
-            />
+          <DatePicker autoOk label='End Date' onChange={this.endDateHandleChange}
+            inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.endDate} />
         </div>
       </div>
-
     </div>
   )
 }
 
-milestoneNameHandle(event){
+milestoneNameHandle(value){
   this.setState({
-    name: event.target.value
+    name: value
   })
 }
 
@@ -97,14 +85,12 @@ startDateHandleChange(date){
   this.setState({
     startDate: date
   })
-  console.log('start handle change',date)
 }
 
 endDateHandleChange(date){
   this.setState({
     endDate: date
   })
-  console.log('end handle change', date.format( "YYYY MM DD"))
 }
 }
 
@@ -124,7 +110,7 @@ const styles = StyleSheet.create({
     lineHeight: 2
   },
   flex7: {
-    flex: 7
+    flex: 4
   },
   flex1: {
     flex: 1

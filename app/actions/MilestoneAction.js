@@ -1,5 +1,6 @@
 import {
   CREATE_MILESTONES,
+  DELETE_MILESTONES,
   UPDATE_MILESTONE,
   CREATE_MILESTONES_FOR_PROJ_DETS
   } from './actionTypes';
@@ -12,6 +13,12 @@ export function createMileStone(){
       startDate: "",
       endDate: ""
     }
+  }
+}
+
+export function deleteMilestone(){
+  return {
+    type: DELETE_MILESTONES
   }
 }
 
@@ -29,13 +36,6 @@ export function createMileStoneForProjDets(){
 export function updateMileStone(uiState, id){
   return {
     type: UPDATE_MILESTONE,
-    payload: {uiState, id}
-  }
-}
-
-export function upDateMilestonForProjDet(uiState, id){
-  return {
-    type: UPDATE_MILESTONR_FOR_PROJ_DETS,
     payload: {uiState, id}
   }
 }

@@ -3,9 +3,13 @@ import { StyleSheet, css } from 'aphrodite';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { createMileStone } from '../../../actions/MilestoneAction';
+import { createMileStone, deleteMilestone } from '../../../actions/MilestoneAction';
 import { submitForm, clearFormData } from '../../../actions/ProjectFormActions';
+
 import MilestonesInput from '../components/milestonesComponent';
+
+import Button from 'react-toolbox/lib/button';
+import Input from 'react-toolbox/lib/input';
 
 class ProjectForm extends Component {
   constructor(props){
@@ -16,7 +20,8 @@ class ProjectForm extends Component {
     }
 
     this.projectNameHandler = this.projectNameHandler.bind(this)
-    this.milestoneOnHandleChange = this.milestoneOnHandleChange.bind(this)
+    this.milestoneAddHandler = this.milestoneAddHandler.bind(this)
+    this.milestoneRemoveHandler = this.milestoneRemoveHandler.bind(this)
     this.renderMilstonesInput = this.renderMilstonesInput.bind(this)
     this.submitHandler = this.submitHandler.bind(this)
   }
@@ -36,26 +41,31 @@ class ProjectForm extends Component {
     return(
       <form className={css(styles.formContainer)}>
         <div className={`form-group`}>
-          <label className={css(styles.label)}>Project Name</label>
-          <input placeholder="Name..." type="text" className={`form-control ${css(styles.inputStyle)}`}
-            value={this.state.projectName} onChange ={(event) => this.projectNameHandler(event)} />
+          <Input type='text' label='Project Name' name='Project Name' value={this.state.projectName} onChange ={this.projectNameHandler}/>
         </div>
         {this.props.form.milestoneKeys.map((key) => this.renderMilstonesInput(key))}
-        <img className={css(styles.addImage)} src="images/Add.png" onClick={() => this.milestoneOnHandleChange()}/>
-        <button className={css(styles.button)} onClick={()=> this.submitHandler()} >Submit</button>
+
+        <i onClick={() => this.milestoneRemoveHandler()} className={`material-icons ${css(styles.add)}`}>remove</i>
+        <i onClick={() => this.milestoneAddHandler()} className={`material-icons ${css(styles.add)}`}>add</i>
+
+        <Button className={css(styles.button)} onClick={()=> this.submitHandler()} label='Submit' flat primary />
       </form>
     )
   }
 
-  projectNameHandler(event){
+  projectNameHandler(value){
     this.setState({
-      projectName: event.target.value
+      projectName: value
     })
   }
 
-  milestoneOnHandleChange(){
+  milestoneAddHandler(){
     this.props.createMileStone()
-    console.log(this.props)
+  }
+
+  milestoneRemoveHandler(){
+    this.props.deleteMilestone()
+    console.log('remove')
   }
 
   renderMilstonesInput(key){
@@ -63,12 +73,13 @@ class ProjectForm extends Component {
   }
 
   submitHandler(){
+    this.props.form.milestones.map((obj)=> ( obj.completed = false ))
+    console.log(this.props.form.milestones)
     const data = {
       projectName: this.state.projectName,
       milestones: this.props.form.milestones
     }
     console.log('submit data',data)
-
     this.props.submitForm(data)
   }
 }
@@ -80,14 +91,13 @@ function mapStateToProps(state){
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({ createMileStone, submitForm, clearFormData }, dispatch)
+  return bindActionCreators({ createMileStone, deleteMilestone, submitForm, clearFormData }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectForm);
 
 const styles = StyleSheet.create({
   formContainer: {
-    minWidth: 1000,
     marginTop: 50
   },
   label: {
@@ -100,19 +110,12 @@ const styles = StyleSheet.create({
     fontFamily: 'avenir next'
   },
   button: {
-    backgroundColor: 'transparent',
     borderStyle: 'solid',
-    borderColor: '#CCCCCC',
+    borderColor: '#2196f3',
     borderWidth: 1,
-    fontFamily: 'avenir next',
-    fontWeight: 'lighter',
-    padding: 5,
-    color: '#666666',
-    textDecoration: 'none',
     float: 'right',
-    marginTop: 30
   },
-  addImage: {
+  add: {
     height: 20,
     cursor: 'pointer'
   }

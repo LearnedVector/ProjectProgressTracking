@@ -1,5 +1,5 @@
 import Firebase from 'firebase';
-import { PROJECT_DETS_STARTING_REQUEST, PROJECT_DETS_FINISHED_REQUEST, UPDATE_FORM_DATA, UPDATE_TO_FIREBASE } from './actionTypes';
+import { PROJECT_DETS_STARTING_REQUEST, PROJECT_DETS_FINISHED_REQUEST } from './actionTypes';
 
 const fb = new Firebase('https://makepptdash.firebaseio.com/project');
 
@@ -27,20 +27,5 @@ export function fetchProjDetsFromFirebase(params){
               (response) => dispatch(finishedRequest(response.val())),
               (error) => console.log(error)
             )
-  }
-}
-
-export function updateFormData(data){
-  return {
-    type: UPDATE_FORM_DATA,
-    payload: data
-  }
-}
-
-export function updateToFirebase(data, params){
-  fb.child(`project/${params}`).update(data)
-  return {
-    type: UPDATE_TO_FIREBASE,
-    payload: true
   }
 }

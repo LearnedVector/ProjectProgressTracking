@@ -1,5 +1,6 @@
 import {
   CREATE_MILESTONES,
+  DELETE_MILESTONES,
   UPDATE_MILESTONE,
   SUBMIT,
   CLEAR_FORM_DATA
@@ -10,7 +11,6 @@ const INITIAL_STATE = {
   projectName: "",
   milestones: [],
   milestoneKeys: [],
-  numOfMilestones: 0
 }
 
 export default function(state = INITIAL_STATE, action){
@@ -21,6 +21,9 @@ export default function(state = INITIAL_STATE, action){
         milestones: [...state.milestones, action.payload],
         milestoneKeys: [...state.milestoneKeys, numKey],
       }
+    case DELETE_MILESTONES:
+      console.log('pop',state.milestoneKeys.pop(), state.milestones.pop())
+      return {...state}
     case UPDATE_MILESTONE:
       state.milestones[action.payload.id] = action.payload.uiState
       return {...state}

@@ -2,44 +2,34 @@ import React , { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { Link } from 'react-router';
 
+import AppBar from 'react-toolbox/lib/app_bar';
+import Button from 'react-toolbox/lib/button';
+
 class Header extends Component {
 
   render(){
     return(
-      <div>
-        <div className={'navbar'}>
-          <Link to="/">
-            <img className={css(styles.logo)} src="images/MakeLogo.png" />
-          </Link>
-          <Link to="/projects" className={css(styles.button)}>Manage</Link>
-        </div>
-        <div className={css(styles.bottomBorder)}>
-        </div>
-      </div>
+      <AppBar flat className={css(styles.nav)}>
+        <Link to="/">
+          <img className={css(styles.logo)} src="images/MakeLogo.png" />
+        </Link>
+        <Link to="/projects"> <Button icon='person' label='admin' />
+        </Link>
+      </AppBar>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  bottomBorder: {
-    borderBottomStyle: 'solid',
-    borderWidth: 1,
-    borderColor: '#CCCCCC',
-  },
   logo: {
     width: 220
   },
-  button: {
-    float: 'right',
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderColor: '#CCCCCC',
+  nav: {
+    backgroundColor: 'white',
+    borderBottomStyle: 'solid',
     borderWidth: 1,
-    fontFamily: 'avenir next',
-    fontWeight: 'lighter',
-    padding: 5,
-    color: '#666666',
-    textDecoration: 'none'
+    borderColor: '#CCCCCC',
+    justifyContent: 'space-between'
   }
 })
 

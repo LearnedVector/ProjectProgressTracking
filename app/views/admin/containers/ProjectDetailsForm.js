@@ -7,6 +7,9 @@ import { createMileStoneForProjDets } from '../../../actions/MilestoneAction';
 import { clearFormData } from '../../../actions/ProjectFormActions';
 import { updateFormData, updateToFirebase } from '../../../actions/FetchProjDetsFromFirebase';
 
+import Button from 'react-toolbox/lib/button';
+import Input from 'react-toolbox/lib/input';
+
 import MilestonesInput from '../components/milestonesComponent';
 
 class ProjectDetailsForm extends Component {
@@ -18,6 +21,7 @@ class ProjectDetailsForm extends Component {
     this.milestoneOnHandleChange = this.milestoneOnHandleChange.bind(this)
     this.renderMilstonesInput = this.renderMilstonesInput.bind(this)
     this.updateHandler = this.updateHandler.bind(this)
+    this.deleteHandler = this.deleteHandler.bind(this)
   }
 
   componentWillMount(){
@@ -51,22 +55,29 @@ class ProjectDetailsForm extends Component {
 
   render(){
     return(
-      <form className={css(styles.formContainer)}>
-        <div className={`form-group`}>
-          <label className={css(styles.label)}>Project Name</label>
-          <input placeholder="Name..." type="text" className={`form-control ${css(styles.inputStyle)}`}
-            value={this.state.projectName} onChange ={(event) => this.projectNameHandler(event)} />
+      <div >
+        <div className={css(styles.deleteContainer)}>
+          <Button className={css(styles.button)} onClick={()=> this.deleteHandler()} label='Delete' flat accent />
         </div>
-        {this.props.projectDetail.milestoneKeys.map((key) => this.renderMilstonesInput(key))}
-        <img className={css(styles.addImage)} src="images/Add.png" onClick={() => this.milestoneOnHandleChange()}/>
-        <button className={css(styles.button)} onClick={()=> this.updateHandler()} >Update</button>
-      </form>
+        <form className={css(styles.formContainer)}>
+          <Input type='text' label='Project Name' name='Project Name' value={this.state.projectName} onChange ={this.projectNameHandler}/>
+          {/*<div className={`form-group`}>
+            <label className={css(styles.label)}>Project Name</label>
+            <input placeholder="Name..." type="text" className={`form-control ${css(styles.inputStyle)}`}
+            value={this.state.projectName} onChange ={(event) => this.projectNameHandler(event)} />
+            </div>
+            {this.props.projectDetail.milestoneKeys.map((key) => this.renderMilstonesInput(key))}
+            <img className={css(styles.addImage)} src="images/Add.png" onClick={() => this.milestoneOnHandleChange()}/>
+          <button className={css(styles.button)} onClick={()=> this.updateHandler()} >Update</button>*/}
+        </form>
+
+      </div>
     )
   }
 
-  projectNameHandler(event){
+  projectNameHandler(value){
     this.setState({
-      projectName: event.target.value
+      projectName: value
     })
   }
 
@@ -85,6 +96,10 @@ class ProjectDetailsForm extends Component {
     }
     this.props.updateToFirebase(data, this.props.params)
   }
+
+  deleteHandler(){
+    console.log('delete')
+  }
 }
 
 function mapStateToProps(state){
@@ -101,7 +116,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProjectDetailsForm);
 
 const styles = StyleSheet.create({
   formContainer: {
-    minWidth: 1000,
     marginTop: 50
   },
   label: {
@@ -114,20 +128,18 @@ const styles = StyleSheet.create({
     fontFamily: 'avenir next'
   },
   button: {
-    backgroundColor: 'transparent',
     borderStyle: 'solid',
     borderColor: '#CCCCCC',
     borderWidth: 1,
-    fontFamily: 'avenir next',
-    fontWeight: 'lighter',
-    padding: 5,
-    color: '#666666',
-    textDecoration: 'none',
     float: 'right',
-    marginTop: 30
   },
   addImage: {
     height: 20,
     cursor: 'pointer'
+  },
+  deleteContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    paddingTop: 40,
   }
 })

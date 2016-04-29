@@ -7,6 +7,10 @@ import { bindActionCreators } from 'redux';
 import { fetchFromFirebase } from '../../../actions/FetchFromFirebase';
 
 import TableRow from '../components/TableRow';
+import Loading from '../components/Loading';
+
+import { List, ListSubHeader } from 'react-toolbox/lib/list';
+import Button from 'react-toolbox/lib/button';
 
 class ProjectTable extends Component {
   constructor(props){
@@ -42,36 +46,46 @@ class ProjectTable extends Component {
     const arr = Object.keys(obj).map( (key) => obj[key]) //turning object into array
     arr.map((newobj) => newobj['key'] = keys[i++]) //giving each object in arr primary keys from database
 
+    const model = {
+      ProjectName: {type: String},
+      Complete: {type: String}
+    };
+
     return(
-      <div className={css(styles.SecondaryContainer)}>
+      <div className={`${css(styles.SecondaryContainer)}`}>
         {this.renderAddnew()}
-        <div className={css(styles.ProjectTableContainer)}>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Project Name</th>
-                <th> % Complete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {arr.map((data) => this.renderTableRow(data))}
-            </tbody>
-          </table>
+        <div className={css(styles.listcontainer)}>
+          <List className={css(styles.list)}>
+            <ListSubHeader caption="Project Name"/>
+            {arr.map((data) => this.renderTableRow(data))}
+          </List>
         </div>
       </div>
     )
   }
 
   renderLoading(){
-    return( <div> LOADING </div>)
+    return( <Loading />)
   }
   renderTableRow(data){
-    return( <TableRow key={data.key} data={data}/> )
+    let value = 0;
+    let max = 0;
+    for(let i = 0; i < data.milestones.length; i++){
+      if(data.milestones[i].completed == true){
+        value ++
+        max++
+      }else{
+        max++
+      }
+    }
+    return( <TableRow key={data.key} data={data} value={value} max={max}/> )
   }
   renderAddnew(){
     return(
       <div className={css(styles.AddnewContainer)}>
-        <Link to={{pathname: "/projects/addnew" ,state: {fetchProjectDets: false} }} className={css(styles.button)}>Add New</Link>
+        <Link to={{pathname: "/projects/addnew"}} className={css(styles.button)}>
+          <Button label="Add" icon="create_new_folder" primary/>
+        </Link>
       </div>
   )
   }
@@ -95,7 +109,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     height: 500,
-  },
+    },
   ProjectTableContainer: {
     display: 'flex',
     flex: 7,
@@ -104,17 +118,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-end',
     paddingTop: 40,
-    paddingBottom: 40
+    float: 'right'
   },
-  button: {
-    backgroundColor: 'transparent',
-    borderStyle: 'solid',
-    borderColor: '#CCCCCC',
-    borderWidth: 1,
-    fontFamily: 'avenir next',
-    fontWeight: 'lighter',
-    padding: 5,
-    color: '#666666',
-    textDecoration: 'none'
+  list: {
+    marginTop: 50,
+    maxWidth: 800
+  },
+  listcontainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
   }
 })

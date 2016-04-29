@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import ProjectForm from './ProjectForm'
-import ProjectDetailsForm from './ProjectDetailsForm'
+import ProjectDetailsTable from './ProjectDetailsTable'
+import Loading from '../components/Loading';
 
 import { fetchProjDetsFromFirebase } from '../../../actions/FetchProjDetsFromFirebase';
 
@@ -13,41 +14,30 @@ export default class FormContainer extends Component {
     super(props)
 
     this.renderLoading = this.renderLoading.bind(this)
-    this.renderProjectForm = this.renderProjectForm.bind(this)
   }
 
   /*Dispatching an action will mutate your current state, which you should not do in the constructor
   (which is your getInitialState function with es6 classes).*/
   componentWillMount(){
-    if(this.props.location.state.fetchProjectDets == true)
     this.props.fetchProjDetsFromFirebase(this.props.params.id)
   }
 
   render(){
-    if (this.props.projectDetail.isFetching == true && (this.props.params.id !== 'addnew'))
+    if (this.props.projectDetail.isFetching == true)
       return this.renderLoading()
-    else if (this.props.params.id == 'addnew')
-      return this.renderProjectForm()
-    else
-      return this.renderProjectDetailsForm()
+    else{
+      return this.props.children || this.renderProjectDetailsForm()
+    }
   }
 
   renderLoading(){
-    return( <div> LOADING </div>)
-  }
-
-  renderProjectForm(){
-    return(
-      <div className={css(styles.container)}>
-        <ProjectForm />
-      </div>
-    )
+    return( <Loading />)
   }
 
   renderProjectDetailsForm(){
     return (
-      <div className={css(styles.container)}>
-        <ProjectDetailsForm data={this.props.projectDetail.data} params={this.props.params.id}/>
+      <div className={`${css(styles.container)}`}>
+        <ProjectDetailsTable data={this.props.projectDetail.data} params={this.props.params.id}/>
       </div>
         )
   }
