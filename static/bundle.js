@@ -92,7 +92,7 @@
 	var reduxLogger = (0, _reduxLogger2.default)();
 	//reduxLogger
 	//for asyn actions, will continue to call functions(thunk)
-	var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default, _reduxThunk2.default, reduxLogger)(_redux.createStore);
+	var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default, _reduxThunk2.default)(_redux.createStore);
 
 	//<Provider store> makes redux store available to the connect calls in the component heirarchy
 	_reactDom2.default.render(_react2.default.createElement(
@@ -64465,6 +64465,7 @@
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
+	      console.log(this.props.editProjDets);
 	      var id = this.props.editProjDets.id;
 	      var milestone = this.props.editProjDets.data;
 	      this.state.milestones[id] = milestone;
@@ -64476,6 +64477,15 @@
 	        projectName: this.state.projectName,
 	        milestones: [].concat((0, _toConsumableArray3.default)(this.state.milestones))
 	      };
+	      console.log(this.newObj);
+
+	      if (this.props.editProjDets.update == true) {
+	        this.setState({
+	          milestones: [],
+	          projectName: ""
+	        });
+	        this.context.router.push('/projects');
+	      }
 	    }
 	  }, {
 	    key: 'render',
@@ -64524,6 +64534,11 @@
 	// import { createMileStoneForProjDets } from '../../../actions/MilestoneAction';
 	// import { clearFormData } from '../../../actions/ProjectFormActions';
 	// import { updateFormData, updateToFirebase, fetchProjDetsFromFirebase } from '../../../actions/FetchProjDetsFromFirebase';
+
+	EditProject.contextTypes = {
+	  router: _react.PropTypes.object
+	};
+
 
 	function mapStateToProps(state) {
 	  return {
@@ -64649,13 +64664,13 @@
 	  (0, _createClass3.default)(MilestonesDetsInput, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      var startDate = new Date(this.props.data.startDate);
-	      var endDate = new Date(this.props.data.endDate);
-	      console.log('compdetswillmount', startDate, endDate);
+	      // const startDate = new Date(this.props.data.startDate)
+	      // const endDate =  new Date(this.props.data.endDate)
+	      // console.log('compdetswillmount', startDate, endDate)
 	      this.setState({
 	        name: this.props.data.name,
-	        startDate: startDate,
-	        endDate: endDate,
+	        startDate: this.props.data.startDate,
+	        endDate: this.props.data.endDate,
 	        completed: this.props.data.completed
 	      });
 	    }
@@ -64668,6 +64683,8 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var startDate = new Date(this.state.startDate);
+	      var endDate = new Date(this.state.endDate);
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'form-group' },
@@ -64685,7 +64702,7 @@
 	            _react2.default.createElement(_date_picker2.default, { autoOk: true, label: 'Start Date', onChange: this.startDateHandleChange,
 	              inputFormat: function inputFormat(value) {
 	                return value.getMonth() + 1 + '/' + value.getDate() + '/' + value.getFullYear();
-	              }, value: this.state.startDate })
+	              }, value: startDate })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -64693,7 +64710,7 @@
 	            _react2.default.createElement(_date_picker2.default, { autoOk: true, label: 'End Date', onChange: this.endDateHandleChange,
 	              inputFormat: function inputFormat(value) {
 	                return value.getMonth() + 1 + '/' + value.getDate() + '/' + value.getFullYear();
-	              }, value: this.state.endDate })
+	              }, value: endDate })
 	          ),
 	          _react2.default.createElement(
 	            'div',
@@ -64713,17 +64730,15 @@
 	  }, {
 	    key: 'startDateHandleChange',
 	    value: function startDateHandleChange(date) {
-
 	      this.setState({
-	        startDate: date
+	        startDate: date.toDateString()
 	      });
 	    }
 	  }, {
 	    key: 'endDateHandleChange',
 	    value: function endDateHandleChange(date) {
-	      console.log('enddate', date);
 	      this.setState({
-	        endDate: date
+	        endDate: date.toDateString()
 	      });
 	    }
 	  }]);

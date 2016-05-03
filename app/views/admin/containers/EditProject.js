@@ -36,6 +36,7 @@ class EditProject extends Component {
   }
 
   componentDidUpdate(){
+    console.log(this.props.editProjDets)
       let id = this.props.editProjDets.id
       let milestone = this.props.editProjDets.data
       this.state.milestones[id] = milestone
@@ -47,6 +48,20 @@ class EditProject extends Component {
         projectName: this.state.projectName,
         milestones: [...this.state.milestones]
       }
+      console.log(this.newObj)
+
+      if(this.props.editProjDets.update == true){
+        this.setState({
+          milestones: [],
+          projectName: ""
+        })
+        this.context.router.push('/projects');
+      }
+  }
+
+
+  static contextTypes = {
+    router: PropTypes.object
   }
 
   render(){

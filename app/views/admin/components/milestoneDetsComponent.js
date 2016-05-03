@@ -30,13 +30,13 @@ class MilestonesDetsInput extends Component {
   }
 
   componentWillMount(){
-    const startDate = new Date(this.props.data.startDate)
-    const endDate =  new Date(this.props.data.endDate)
-    console.log('compdetswillmount', startDate, endDate)
+    // const startDate = new Date(this.props.data.startDate)
+    // const endDate =  new Date(this.props.data.endDate)
+    // console.log('compdetswillmount', startDate, endDate)
     this.setState({
       name: this.props.data.name,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: this.props.data.startDate,
+      endDate: this.props.data.endDate,
       completed: this.props.data.completed
     })
   }
@@ -47,6 +47,8 @@ class MilestonesDetsInput extends Component {
   }
 
   render(){
+    const startDate = new Date(this.state.startDate)
+    const endDate = new Date(this.state.endDate)
     return(
       <div className={`form-group`}>
 
@@ -57,12 +59,12 @@ class MilestonesDetsInput extends Component {
 
           <div className={css(styles.flex1)}>
             <DatePicker autoOk label='Start Date' onChange={this.startDateHandleChange}
-              inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.startDate} />
+              inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={startDate} />
           </div>
 
           <div className={css(styles.flex1)}>
             <DatePicker autoOk label='End Date' onChange={this.endDateHandleChange}
-              inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.endDate}/>
+              inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={endDate}/>
             {/*<DatePicker autoOk label='End Date' onChange={this.endDateHandleChange}
             inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.endDate} />*/}
           </div>
@@ -81,16 +83,14 @@ class MilestonesDetsInput extends Component {
   }
 
   startDateHandleChange(date){
-
     this.setState({
-      startDate: date
+      startDate: date.toDateString()
     })
   }
 
   endDateHandleChange(date){
-    console.log('enddate',date)
     this.setState({
-      endDate: date
+      endDate: date.toDateString()
     })
   }
 }

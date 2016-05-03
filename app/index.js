@@ -14,7 +14,7 @@ import routes from './routes'
 
 const reduxLogger = createLogger();
 //reduxLogger
-const createStoreWithMiddleware = applyMiddleware(reduxPromise, reduxThunk, reduxLogger)(createStore);
+const createStoreWithMiddleware = applyMiddleware(reduxPromise, reduxThunk)(createStore);
 
 //<Provider store> makes redux store available to the connect calls in the component heirarchy
 ReactDOM.render(
