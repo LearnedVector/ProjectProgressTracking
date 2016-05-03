@@ -27,7 +27,10 @@ export default class TableRow extends Component {
     let secondDate = new Date(this.endDate);
     let firstDate = new Date(this.props.data.milestones[0].startDate)
 
-    this.daysUntilLaunch = Math.round(Math.abs((currentDate.getTime() - secondDate.getTime())/(oneDay)))
+    this.daysUntilLaunch = Math.round((secondDate.getTime() - currentDate.getTime())/(oneDay))
+    if (this.daysUntilLaunch < 0)
+      this.daysUntilLaunch = 0;
+      
     this.ProjectLength = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)))
 
     this.value = ((this.ProjectLength - this.daysUntilLaunch)/this.ProjectLength)

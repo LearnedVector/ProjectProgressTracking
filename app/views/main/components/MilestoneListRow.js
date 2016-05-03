@@ -1,98 +1,89 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router'
 import { StyleSheet, css } from 'aphrodite';
+import { ListItem, ListDivider } from 'react-toolbox/lib/list';
 
-import { ListItem,ListDivider } from 'react-toolbox/lib/list';
-// import ProgressBar from 'react-toolbox/lib/progress_bar';
 var ProgressBar = require('progressbar.js')
 
 export default class MilestoneListRow extends Component {
   constructor(props){
     super(props)
+    this.value = 0
+
+    this.renderDots = this.renderDots.bind(this)
+    this.renderCircleBar = this.renderCircleBar.bind(this)
   }
 
   componentWillMount(){
-    console.log(this.props)
-    for(let i = 0; i < this.props.data.milestones.length; i++){
-      if(this.props.data.milestones[i].completed == true){
-        this.endDate = this.props.data.milestones[i].endDate
-      }
-      else{
-        this.endDate = this.props.data.milestones[i].endDate
-      }
-    }
-
+    // console.log(this.props)
     let oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
     let currentDate = new Date();
-    let secondDate = new Date(this.endDate);
-    let firstDate = new Date(this.props.data.milestones[0].startDate)
+    let endDate = new Date(this.props.data.endDate);
+    let startDate = new Date(this.props.data.startDate)
 
-    this.daysUntilLaunch = Math.round(Math.abs((currentDate.getTime() - secondDate.getTime())/(oneDay)))
-    this.ProjectLength = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)))
+    let range = (endDate.getTime() - startDate.getTime())/(oneDay)
 
-    this.value = ((this.ProjectLength - this.daysUntilLaunch)/this.ProjectLength)
+    let days = (endDate.getTime() - currentDate.getTime())/(oneDay)
+
+    if ((currentDate.getTime() >= startDate.getTime()) && (currentDate.getTime() <= endDate.getTime())){
+      this.value = ((range - days) / range)
+    }
 
   }
 
   componentDidMount(){
-    this.bar = new ProgressBar.Line(`#${this.props.data.key}`, {
-      strokeWidth: 4,
-      easing: 'easeInOut',
-      duration: 1400,
-      color: '#FFEA82',
-      trailColor: '#eee',
-      trailWidth: 10,
-      svgStyle: {width: '100%', height: '100%'},
-      from: {color: '#B3E5FC'},
-      to: {color: '#03A9F4'},
-      step: (state, bar) => {
-        bar.path.setAttribute('stroke', state.color);
-      }
-    })
+    const name = this.props.data.name
+    if (this.value > 0){
+      var bar = new ProgressBar.Circle(`#${this.props.id}`, {
+        color: '#212121',
+        trailColor: '#eee',
+        trailWidth: 5,
+        duration: 1400,
+        easing: 'bounce',
+        strokeWidth: 6,
+        from: {color: '#B3E5FC', a:0},
+        to: {color: '#03A9F4', a:1},
+        // Set default step function for all animate calls
+        step: function(state, circle) {
+          circle.path.setAttribute('stroke', state.color)
+          circle.setText(name)
+        }
+      });
 
-    this.bar.animate(this.value);  // Number from 0.0 to 1.0
-
+      bar.animate(this.value);  // Number from 0.0 to 1.0
+    }
   }
 
   render(){
-    return(
-      <Link
-        className={css(styles.Link)}
-        to={{ pathname:`/projects/${this.props.data.key}`, state: {fetchProjectDets: true} }} >
-        <div className={css(styles.container)}>
-          <ListItem
-            selectable
-            className={css(styles.ListItem)}
-            caption={this.props.data.projectName}
-            legend={`${this.props.value}/${this.props.max} completed `}
-          />
-          <div id={this.props.data.key} className={css(styles.ProgressBar)}>
-          </div>
-        </div>
-      </Link>
-    )
+    return this.value > 0 ? this.renderCircleBar() : this.renderDots()
+  }
 
+  renderCircleBar(){
+    return(
+      <div id={this.props.id} className={css(styles.ProgressBar)}></div>
+    )
+  }
+
+  renderDots(){
+    return(
+      <div className={css(styles.circle)}></div>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   ProgressBar:{
-    height: 3,
-    marginBottom: 15,
-    marginTop: -15
-  },
-  ListItem:{
-    flex: 9,
-    // positon: 'relative',
-    // right: 90
+    width: '125px',
+    height: '125px'
   },
   container: {
     display: 'flex',
-    marginTop: 15,
-    flexDirection: 'column'
+    flex: 1,
+    flexDirection: 'column',
   },
-  Link: {
-    textDecoration: 'none',
+  circle: {
+    height: 25,
+    width: 25,
+    borderRadius: 13,
+    backgroundColor: '#eee'
   }
-
 })

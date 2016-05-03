@@ -2,6 +2,8 @@ import React ,{ Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 var ProgressBar = require('progressbar.js')
 import LaunchSVG from './LaunchSVG';
+import MilestoneListRow from './MilestoneListRow';
+import { List } from 'react-toolbox/lib/list';
 
 export default class Project extends Component {
   constructor(){
@@ -38,7 +40,11 @@ export default class Project extends Component {
     let secondDate = new Date(this.endDate);
     let firstDate = new Date(this.props.data.milestones[0].startDate)
 
-    this.daysUntilLaunch = Math.round(Math.abs((currentDate.getTime() - secondDate.getTime())/(oneDay)))
+    this.daysUntilLaunch = Math.round((secondDate.getTime() - currentDate.getTime())/(oneDay))
+
+    if (this.daysUntilLaunch < 0)
+      this.daysUntilLaunch = 0;
+
     this.ProjectLength = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)))
 
     this.value = ((this.ProjectLength - this.daysUntilLaunch)/this.ProjectLength)
@@ -71,6 +77,7 @@ export default class Project extends Component {
   }
 
   render() {
+
     return(
       <div className={css(styles.barContainer)}>
         <h1>{this.props.data.projectName}</h1>
@@ -79,12 +86,13 @@ export default class Project extends Component {
         </div>
         <div id={this.props.data.key} className={`${css(styles.progressBar)}`} > </div>
         <div className={`col-lg-12 col-md-12 col-sm-12`} style={{display: 'flex', flexDirection: 'row', flex:1}} >
-          {/*<div className={`${css(styles.launchDayContainer)} `}>AAA</div>*/}
+          <div className={`${css(styles.milestoneBarContainer)} `}>
+            {this.props.data.milestones.map((data)=> <MilestoneListRow key={this.key++} data={data} id={this.props.data.key+this.key.toString()}/>)}
+          </div>
           <div className={`${css(styles.launchDayContainer)} `}>
             <div className={css(styles.launchDayWordContainer)} style={{fontSize: this.fontSize}}>
               <div>{this.daysUntilLaunch} {this.daysUntilLaunch > 1 ? "Days..." : "Day..."}</div>
-              {/*<div> Until </div>
-              {this.daysUntilLaunch < 7 ? <div></div> : <div>Launch</div>  }*/}
+              { this.daysUntilLaunch < 7 ? <div></div> : <div>Launch</div>  }
             </div>
             { this.daysUntilLaunch < 7 ? <LaunchSVG /> : "" }
           </div>
@@ -96,12 +104,11 @@ export default class Project extends Component {
   renderMilestones(milestone){
     if (milestone.completed == false && this.isHighlightMilestone == false){
       this.isHighlightMilestone = true
-      return <h4 className={css(styles.margin)} key={this.key++}>{milestone.name} </h4>
+      return <h6 className={`${css(styles.margin)} ${css(styles.underLine)}`} key={this.key++}>{milestone.name} </h6>
     }
     else
       // return <h6 className={css(styles.margin)} key={this.key++}> {milestone.name} </h6>
-      return <div key={this.key++} className={css(styles.circle)}></div>
-
+      return <h6 className={css(styles.margin)} key={this.key++}>{milestone.name} </h6>
   }
 
   reAnimate(){
@@ -130,16 +137,29 @@ const styles = StyleSheet.create({
     // margin: 20,
     height: 100
   },
+  milestoneBarContainer: {
+    display: 'flex',
+    flex: 3,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    minHeight: 283
+  },
   margin: {
     padding: 10
+  },
+  underLine:{
+    borderBottom: '2px solid #03A9F4'
   },
   hightlight: {
     color: 'blue'
   },
   launchDayContainer: {
     display: 'flex',
-    flex: 1,
-    justifyContent: 'center',
+    flex: 2,
+    justifyContent: 'space-around',
+    flexWrap: 'wrap',
     alignItems: 'center',
   },
   launchDayWordContainer: {

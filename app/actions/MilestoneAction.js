@@ -34,6 +34,7 @@ export function createMileStoneForProjDets(){
 }
 
 export function updateMileStone(uiState, id){
+  console.log(uiState)
   return {
     type: UPDATE_MILESTONE,
     payload: {uiState, id}

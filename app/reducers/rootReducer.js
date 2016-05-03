@@ -9,7 +9,8 @@ const rootReducer = combineReducers({
   form: formReducer,
   project: projectReducer,
   projectDetail: projectDetailReducer,
-  progressDisplay: progressDisplayReducer
+  progressDisplay: progressDisplayReducer,
+  editProjDets: editProjectDetailReducer
 });
 
 export default rootReducer;

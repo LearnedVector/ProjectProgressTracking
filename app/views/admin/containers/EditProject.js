@@ -5,9 +5,11 @@ import { bindActionCreators } from 'redux';
 
 import MilestoneDetsInput from '../components/MilestoneDetsComponent';
 
-import { createMileStoneForProjDets } from '../../../actions/MilestoneAction';
-import { clearFormData } from '../../../actions/ProjectFormActions';
-import { updateFormData, updateToFirebase, fetchProjDetsFromFirebase } from '../../../actions/FetchProjDetsFromFirebase';
+// import { createMileStoneForProjDets } from '../../../actions/MilestoneAction';
+// import { clearFormData } from '../../../actions/ProjectFormActions';
+// import { updateFormData, updateToFirebase, fetchProjDetsFromFirebase } from '../../../actions/FetchProjDetsFromFirebase';
+
+import { updateDetsToFirebase } from '../../../actions/editProjectDetailAction';
 
 import Button from 'react-toolbox/lib/button';
 import Input from 'react-toolbox/lib/input';
@@ -15,33 +17,51 @@ import Input from 'react-toolbox/lib/input';
 class EditProject extends Component {
   constructor(props){
     super(props)
+    console.log(props)
+    this.state = {
+      milestones: [],
+      projectName: ""
+    }
 
+    this.newObj = {}
+    this.projectNameHandler = this.projectNameHandler.bind(this)
+    this.updateToFirebase = this.updateToFirebase.bind(this)
   }
 
   componentWillMount(){
     this.setState({
       milestones: [...this.props.projectDetail.data.milestones],
       projectName: this.props.projectDetail.data.projectName,
-      key: 0
     })
   }
 
   componentDidUpdate(){
-    console.log(this.state)
+      let id = this.props.editProjDets.id
+      let milestone = this.props.editProjDets.data
+      this.state.milestones[id] = milestone
+      // console.log('before', this.state.milestones[id])
+      // milestone.startDate = milestone.startDate.toDateString()
+      // milestone.endDate = milestone.endDate.toDateString()
+      // console.log('after', this.state.milestones[id])
+      this.newObj = {
+        projectName: this.state.projectName,
+        milestones: [...this.state.milestones]
+      }
   }
 
   render(){
+    let keys = 0
     return(
       <form className={css(styles.formContainer)}>
         <div className={`form-group`}>
           <Input type='text' label='Project Name' name='Project Name' value={this.state.projectName} onChange ={this.projectNameHandler}/>
         </div>
-        {this.state.milestones.map((obj) => this.renderMilstonesInput(obj, this.state.key++))}
+        {this.state.milestones.map((obj) => this.renderMilstonesInput(obj, keys++))}
 
         {/*<i onClick={() => this.milestoneRemoveHandler()} className={`material-icons ${css(styles.add)}`}>remove</i>
         <i onClick={() => this.milestoneAddHandler()} className={`material-icons ${css(styles.add)}`}>add</i>*/}
 
-        <Button className={css(styles.button)} onClick={()=> console.log('update')} label='Update' flat primary />
+        <Button className={css(styles.button)} onClick={()=> this.updateToFirebase()} label='Update' flat primary />
       </form>
 
     )
@@ -52,20 +72,31 @@ class EditProject extends Component {
       projectName: value
     })
   }
+
   renderMilstonesInput(obj,key){
       return (
         <MilestoneDetsInput key={key} id={key} data={obj}/>
       )
+  }
+
+  updateToFirebase(){
+    console.log('upatetofirebase')
+    this.props.updateDetsToFirebase(this.newObj, this.props.params.id)
   }
 }
 
 function mapStateToProps(state){
   return {
     projectDetail: state.projectDetail,
+    editProjDets: state.editProjDets
   }
 }
 
-export default connect(mapStateToProps)(EditProject)
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({updateDetsToFirebase}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProject)
 
 const styles = StyleSheet.create({
   formContainer: {

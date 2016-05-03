@@ -8,15 +8,12 @@ const INITIAL_STATE = {
 export default function (state = INITIAL_STATE, action ){
   switch(action.type){
     case PROJECT_DETS_STARTING_REQUEST:
-    return {...state, isFetching: true}
+    return { ...state, isFetching: true }
     case PROJECT_DETS_FINISHED_REQUEST:
     return {...state,
       isFetching: false,
       data: action.payload }
-      case UPDATE_TO_FIREBASE:
-      state.update = action.payload
-      return {...state}
-      default:
+    default:
       return state
     }
   }

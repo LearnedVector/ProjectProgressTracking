@@ -65,7 +65,6 @@ class ProjectForm extends Component {
 
   milestoneRemoveHandler(){
     this.props.deleteMilestone()
-    console.log('remove')
   }
 
   renderMilstonesInput(key){
@@ -74,13 +73,12 @@ class ProjectForm extends Component {
 
   submitHandler(){
     this.props.form.milestones.map((obj)=> ( obj.completed = false ))
-    console.log(this.props.form.milestones)
     const data = {
       projectName: this.state.projectName,
       milestones: this.props.form.milestones
     }
-    console.log('submit data',data)
-    this.props.submitForm(data)
+    console.log(data)
+    // this.props.submitForm(data)
   }
 }
 

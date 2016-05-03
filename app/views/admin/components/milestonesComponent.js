@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-// import DatePicker from 'react-datepicker';
-import moment from 'moment';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 

@@ -47,7 +47,7 @@ class ProgressDisplay extends Component {
     var settings = {
       dots: true,
       speed: 500,
-      autoplay: true,
+      // autoplay: true,
       autoplaySpeed: 10000,
       fade: true,
       slidesToShow: 1,
@@ -84,6 +84,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(ProgressDisplay);
 const styles = StyleSheet.create({
   sliderContainer: {
     height: '100%',
-    marginTop: 100
+    marginTop: 50
     }
 })

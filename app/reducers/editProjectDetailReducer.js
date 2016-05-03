@@ -1,21 +1,19 @@
-import { UPDATE_FORM_DATA, UPDATE_TO_FIREBASE } from '../actions/actionTypes';
+import { UPDATE_FORM_DATA, UPDATE_DETS_TO_FIREBASE, UPDATE_MILESTONE_FOR_PROJ_DETS } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
-  edit: false,
-  projectName: "",
-  milestones: [],
-  milestoneKeys: []
+  data: {},
+  id: 0,
+  update: false
 }
 
 export default function (state = INITIAL_STATE, action ){
   switch(action.type){
-    case UPDATE_FORM_DATA:
-      return {...state,
-        projectName: action.payload.projectName,
-        milestones: action.payload.milestones,
-        milestoneKeys: action.payload.milestoneKeys,
+    case UPDATE_MILESTONE_FOR_PROJ_DETS:
+      return {
+        data: action.payload.data,
+        id: action.payload.id
       }
-    case UPDATE_TO_FIREBASE:
+    case UPDATE_DETS_TO_FIREBASE:
       state.update = action.payload
       return {...state}
     default:

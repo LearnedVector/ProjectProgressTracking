@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-// import DatePicker from 'react-datepicker';
+
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { updateMileStone, upDateMilestonForProjDet  } from '../../../actions/MilestoneAction';
+import { updateFormData } from '../../../actions/editProjectDetailAction';
 
 import Input from 'react-toolbox/lib/input';
 import DatePicker from 'react-toolbox/lib/date_picker';
@@ -16,6 +16,13 @@ class MilestonesDetsInput extends Component {
   constructor(props){
     super(props)
 
+    this.state = {
+      name: " ",
+      startDate: new Date(),
+      endDate: new Date(),
+      completed: false
+    }
+
     this.milestoneNameHandle = this.milestoneNameHandle.bind(this)
     this.startDateHandleChange = this.startDateHandleChange.bind(this)
     this.endDateHandleChange = this.endDateHandleChange.bind(this)
@@ -23,18 +30,20 @@ class MilestonesDetsInput extends Component {
   }
 
   componentWillMount(){
-    const startDate = new Date(this.props.data.startDate);
+    const startDate = new Date(this.props.data.startDate)
     const endDate =  new Date(this.props.data.endDate)
+    console.log('compdetswillmount', startDate, endDate)
     this.setState({
       name: this.props.data.name,
       startDate: startDate,
       endDate: endDate,
       completed: this.props.data.completed
     })
-    console.log(this.props.data)
   }
 
   componentDidUpdate(){
+    console.log('compwillupdate',this.state)
+    this.props.updateFormData(this.state, this.props.id)
   }
 
   render(){
@@ -54,6 +63,8 @@ class MilestonesDetsInput extends Component {
           <div className={css(styles.flex1)}>
             <DatePicker autoOk label='End Date' onChange={this.endDateHandleChange}
               inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.endDate}/>
+            {/*<DatePicker autoOk label='End Date' onChange={this.endDateHandleChange}
+            inputFormat={(value) => `${value.getMonth()+1}/${value.getDate()}/${value.getFullYear()}`} value={this.state.endDate} />*/}
           </div>
           <div>
             <Input type='text' label='Completed' value={this.state.completed ? "YES" : "NO"} disabled />
@@ -70,12 +81,14 @@ class MilestonesDetsInput extends Component {
   }
 
   startDateHandleChange(date){
+
     this.setState({
       startDate: date
     })
   }
 
   endDateHandleChange(date){
+    console.log('enddate',date)
     this.setState({
       endDate: date
     })
@@ -83,7 +96,7 @@ class MilestonesDetsInput extends Component {
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators( { upDateMilestonForProjDet }, dispatch )
+  return bindActionCreators( { updateFormData }, dispatch )
 }
 
 export default connect(null, mapDispatchToProps)(MilestonesDetsInput);
