@@ -24,7 +24,7 @@ export function fetchFromFirebase(){
 
     return fb.child("project").once("value")
             .then(
-              (response) => {dispatch(finishedRequest(response.val())), console.log('from dispatch',response)},
+              (response) => {dispatch(finishedRequest(response.val()))},
               (error) => console.log(error)
             )
   }

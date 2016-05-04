@@ -15,6 +15,9 @@ import Button from 'react-toolbox/lib/button';
 class ProjectTable extends Component {
   constructor(props){
     super(props)
+    this.state={
+      update: false
+    }
 
     this.renderTableRow = this.renderTableRow.bind(this)
     this.renderTable = this.renderTable.bind(this)
@@ -23,14 +26,34 @@ class ProjectTable extends Component {
   }
 
   componentWillMount(){
+    console.log('compwillmount', this.props)
+
     this.props.fetchFromFirebase()
   }
 
-  componentDidupdate(){
-    this.props.fetchFromFirebase()
-  }
+  // componentDidUpdate(){
+  //   console.log('compdidupdate', this.props)
+  //
+  //   this.setState({
+  //     update: false
+  //   })
+  // }
+
+  // componentWillUpdate(){
+  //   if (this.state.update == true){
+  //     this.props.fetchFromFirebase()
+  //   }
+  // }
+
+  // componentWillReceiveProps(){
+  //   console.log("updatetrue")
+  //   this.setState({
+  //     update: true
+  //   })
+  // }
 
   render() {
+
     if(this.props.project.isFetching == true)
       return (this.renderLoading())
     else if(this.props.project.isFetching == false && (this.props.project.data !== null))

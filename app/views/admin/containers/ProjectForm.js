@@ -78,7 +78,7 @@ class ProjectForm extends Component {
       milestones: this.props.form.milestones
     }
     console.log(data)
-    // this.props.submitForm(data)
+    this.props.submitForm(data)
   }
 }
 

@@ -7,7 +7,7 @@ import Slider from 'react-slick/dist/react-slick';
 import Project from '../components/Projects';
 import Loading from '../../admin/components/Loading';
 
-import {FetchForProgressDisplay} from '../../../actions/FetchForProgressDisplay';
+import { FetchForProgressDisplay } from '../../../actions/FetchForProgressDisplay';
 
 class ProgressDisplay extends Component {
   constructor(){
@@ -47,12 +47,13 @@ class ProgressDisplay extends Component {
     var settings = {
       dots: true,
       speed: 500,
-      // autoplay: true,
+      autoplay: true,
       autoplaySpeed: 10000,
       fade: true,
       slidesToShow: 1,
       slidesToScroll: 1
     }
+    
     return(
       <div id="slider" className={`container ${css(styles.sliderContainer)}`}>
         <Slider {...settings}>

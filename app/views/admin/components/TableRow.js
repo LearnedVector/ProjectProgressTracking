@@ -12,7 +12,6 @@ export default class TableRow extends Component {
   }
 
   componentWillMount(){
-    console.log(this.props)
     for(let i = 0; i < this.props.data.milestones.length; i++){
       if(this.props.data.milestones[i].completed == true){
         this.endDate = this.props.data.milestones[i].endDate
@@ -30,7 +29,7 @@ export default class TableRow extends Component {
     this.daysUntilLaunch = Math.round((secondDate.getTime() - currentDate.getTime())/(oneDay))
     if (this.daysUntilLaunch < 0)
       this.daysUntilLaunch = 0;
-      
+
     this.ProjectLength = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)))
 
     this.value = ((this.ProjectLength - this.daysUntilLaunch)/this.ProjectLength)

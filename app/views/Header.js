@@ -13,7 +13,7 @@ class Header extends Component {
         <Link to="/">
           <img className={css(styles.logo)} src="images/MakeLogo.png" />
         </Link>
-        <Link to="/projects"> <Button icon='person' label='admin' />
+        <Link to={{ pathname: '/projects', state: { fromAdminBtn: true }}} > <Button icon='person' label='admin' />
         </Link>
       </AppBar>
     )

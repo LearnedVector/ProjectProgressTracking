@@ -95,9 +95,9 @@ export default class ProjectDetailsTable extends Component {
   }
 
   archiveToFirebase(){
-    // fb.child('archive').push(this.state)
-    // fb.child(`project/${this.props.params}`).remove()
-    console.log(this.props.data)
+    fb.child('archive').push({data: this.props.data, key: this.props.params})
+    fb.child(`project/${this.props.params}`).remove()
+    // console.log(this.props.data)
     this.context.router.push('/projects');
   }
 }
