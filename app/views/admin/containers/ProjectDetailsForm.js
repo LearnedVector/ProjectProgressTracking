@@ -16,7 +16,6 @@ class ProjectDetailsForm extends Component {
   constructor(props){
     super(props)
 
-    console.log('prjtFrm',this.props)
     this.projectNameHandler = this.projectNameHandler.bind(this)
     this.milestoneOnHandleChange = this.milestoneOnHandleChange.bind(this)
     this.renderMilstonesInput = this.renderMilstonesInput.bind(this)

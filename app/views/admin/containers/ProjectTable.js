@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import { fetchFromFirebase } from '../../../actions/FetchFromFirebase';
+import { doneArchiveToFB } from '../../../actions/archive';
 
 import TableRow from '../components/TableRow';
 import Loading from '../components/Loading';
@@ -26,31 +27,15 @@ class ProjectTable extends Component {
   }
 
   componentWillMount(){
-    console.log('compwillmount', this.props)
-
     this.props.fetchFromFirebase()
   }
 
-  // componentDidUpdate(){
-  //   console.log('compdidupdate', this.props)
-  //
-  //   this.setState({
-  //     update: false
-  //   })
-  // }
-
-  // componentWillUpdate(){
-  //   if (this.state.update == true){
-  //     this.props.fetchFromFirebase()
-  //   }
-  // }
-
-  // componentWillReceiveProps(){
-  //   console.log("updatetrue")
-  //   this.setState({
-  //     update: true
-  //   })
-  // }
+  componentDidUpdate(){
+    if (this.props.archive.archive == true){
+      this.props.doneArchiveToFB()
+      this.props.fetchFromFirebase()
+    }
+  }
 
   render() {
 
@@ -117,12 +102,13 @@ class ProjectTable extends Component {
 
 function mapStateToProps(state){
   return {
-    project: state.project
+    project: state.project,
+    archive: state.archive
   }
 }
 
 function mapDispatchToProps(dispatch){
-  return bindActionCreators( { fetchFromFirebase }, dispatch )
+  return bindActionCreators( { fetchFromFirebase, doneArchiveToFB }, dispatch )
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProjectTable);

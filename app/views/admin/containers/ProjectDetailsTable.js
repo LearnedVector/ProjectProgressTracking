@@ -1,6 +1,8 @@
 import React ,{ Component, PropTypes } from 'react'
 import { StyleSheet, css } from 'aphrodite';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { List, ListItem, ListSubHeader, ListDivider, ListCheckbox } from 'react-toolbox/lib/list';
 import { Layout, NavDrawer, Panel, Sidebar } from 'react-toolbox';
@@ -8,10 +10,12 @@ import Checkbox from 'react-toolbox/lib/checkbox';
 import Table from 'react-toolbox/lib/table';
 import Button from 'react-toolbox/lib/button';
 
+import { ArchiveToFB } from '../../../actions/archive';
+
 import Firebase from 'firebase';
 const fb = new Firebase('https://makepptdash.firebaseio.com/');
 
-export default class ProjectDetailsTable extends Component {
+class ProjectDetailsTable extends Component {
   constructor(props){
     super(props)
     this.state={
@@ -95,12 +99,19 @@ export default class ProjectDetailsTable extends Component {
   }
 
   archiveToFirebase(){
-    fb.child('archive').push({data: this.props.data, key: this.props.params})
-    fb.child(`project/${this.props.params}`).remove()
-    // console.log(this.props.data)
+    this.props.ArchiveToFB(this.props.data, this.props.params)
+    // fb.child('archive').push({data: this.props.data, key: this.props.params})
+    // fb.child(`project/${this.props.params}`).remove()
+    // // console.log(this.props.data)
     this.context.router.push('/projects');
   }
 }
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({ ArchiveToFB }, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(ProjectDetailsTable)
 
 const styles = StyleSheet.create({
   button1: {
